@@ -1,14 +1,14 @@
 CXX = g++
-CXXFLAGS = -Wall -O
-LDFLAGS = -I/usr/local/include /usr/lib/libgtest.a -pthread
-SOURCES = Ex02-Fibonacci.cpp
-MAINSOURCES = Ex02-Fibonacci_main.cpp
-TESTSOURCES = Ex02-Fibonacci_test.cpp
+CXXFLAGS = -Wall -O -I/usr/local/include
+LDFLAGS = /usr/lib/libgtest.a -pthread
+SOURCES = src/Fibonacci.cpp
+MAINSOURCES = src/Fibonacci_main.cpp
+TESTSOURCES = src/Fibonacci_test.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
 TESTOBJECTS = $(TESTSOURCES:.cpp=.o)
 MAINOBJECTS = $(MAINSOURCES:.cpp=.o)
-EXECUTABLE = Ex02-Fibonacci
-EXECUTABLE_TEST = Ex02-Fibonacci_test
+EXECUTABLE = Fibonacci
+EXECUTABLE_TEST = Fibonacci_test
 
 .PHONY: all
 all: build
