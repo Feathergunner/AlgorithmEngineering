@@ -49,3 +49,19 @@ int getFibo4(int n){
 	// now the n-th fibonacci-number is at fib[1][0]
 	return fib.get_elementAt(1,0);
 }
+
+/*
+	computes the n-th fibonacci-number in constant time using the derived formula
+*/
+int getFibo5(int n){
+	//trivial cases:
+	if (n<0) return -1;
+	if (n==0) return 0;
+	if (n==1) return 1;
+	
+	//the formula:
+	int res = (int)floor((1/sqrt(5))*pow((1+sqrt(5))/2,n)-(1/2));
+	//i don't know why, but it seems like res is always 1 too small for odd n
+	if (n%2==1) res+=1;
+	return res;
+}
