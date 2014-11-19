@@ -1,11 +1,11 @@
+#ifndef meter_h
+#define meter_h
+
 #include <vector>
 #include <cstdint>
 #include <math.h>
 #include <fstream>
 #include <iomanip>
-
-#ifndef meter_h
-#define meter_h
 
 #include "StopWatch.h"
 
