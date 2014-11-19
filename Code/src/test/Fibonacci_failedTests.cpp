@@ -1,5 +1,6 @@
-#include "../Fibonacci.cpp"
 #include <gtest/gtest.h>
+
+#include "../../include/Fibonacci.h"
 
 using namespace std;
 
@@ -11,13 +12,13 @@ int main(int argc, char **argv){
 /*
 	test fails because of integer overflow
 	
-	can be fixed by using an integer type with larger positiv range, like uint64_t
+	can be fixed by using an integer type with extra larg positiv range
 	contra:
 		- needs more space
-		- with unsigned integers, one cannot return -1 as a error flag
+		- more programming time effort needed
 */
 TEST(FailTheImplementaion, Fib4Test){
-	EXPECT_GT(getFibo4(50),0);
+	EXPECT_GT(Fibonacci::getFibo4(94),Fibonacci::getFibo4(94));
 }
 
 /*
@@ -29,7 +30,7 @@ TEST(FailTheImplementaion, Fib4Test){
 		- needs more space
 */
 TEST(FailTheImplementaion, Fib5Test){
-	EXPECT_EQ(getFibo4(37),getFibo5(37));
+	EXPECT_EQ(Fibonacci::getFibo4(41),Fibonacci::getFibo5(41));
 }
 
 /*
@@ -40,5 +41,5 @@ TEST(FailTheImplementaion, Fib5Test){
 		- has to be computed first, independent of if it's needed
 */
 TEST(FailTheImplementaion, Fib6Test){
-	EXPECT_GT(getFibo6(42),0);
+	EXPECT_GT(Fibonacci::getFibo6(42),0);
 }

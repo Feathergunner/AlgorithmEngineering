@@ -1,4 +1,5 @@
 #include "../include/IntMatrix.h"
+
 #include <gtest/gtest.h>
 
 //constructs new r x c -Matrix and initialises all entries = 0
@@ -28,20 +29,16 @@ IntMatrix::IntMatrix(unsigned int r, unsigned int c,  std::vector<std::vector<in
 	matrix = data;
 }
 
-//returns identity matrix of size r*c
-IntMatrix IntMatrix::getIdentityMatrix(unsigned int r, unsigned int c){
+//returns identity matrix of size s x s
+IntMatrix IntMatrix::getIdentityMatrix(uint32_t s){
 	//check if dimensions > 0
-	EXPECT_GT(r,0);
-	EXPECT_GT(c,0);
+	EXPECT_GT(s,0);
+	EXPECT_GT(s,0);
 	
-	IntMatrix ret = IntMatrix(r,c);
-	//get minimum of r,c
-	unsigned int min = 0;
-	if (r<c) min = r;
-	else min = c;
+	IntMatrix ret = IntMatrix(s,s);
 	
 	//set diagonal entries [i][i]=1
-	for (unsigned int i=0; i<min; i++)
+	for (uint32_t i=0; i<s; i++)
 		ret.matrix[i][i] = 1;
 		
 	return ret;
@@ -83,7 +80,7 @@ IntMatrix IntMatrix::expBySqr(unsigned int p){
 	//initialise ret = this:
 	IntMatrix ret = IntMatrix(cols, rows, matrix);
 	if (p==0)
-		return getIdentityMatrix(rows,cols);
+		return getIdentityMatrix(rows);
 	if (p==1) //do nothing
 		return ret;
 	if (p%2==0){
@@ -102,4 +99,17 @@ void IntMatrix::print(){
 		}
 		std::cout << std::endl;
 	}
+}
+
+//relational operators:
+// equality: checks if lhs and rhs are of the same size, returns falso if not
+// else checks if every entry in lhs is equal to the corresponding entry in rhs
+bool operator==(IntMatrix& lhs, IntMatrix& rhs){
+	if (lhs.get_rows() != rhs.get_rows() || lhs.get_cols() != rhs.get_cols()) return false;
+	else{
+		for (unsigned int i=0; i<lhs.get_rows(); i++)
+			for (unsigned int j=0; j<lhs.get_cols(); j++)
+				if (lhs.get_elementAt(i,j) != rhs.get_elementAt(i,j)) return false;
+	}
+	return true;
 }

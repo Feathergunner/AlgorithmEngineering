@@ -1,10 +1,13 @@
-#include "../IntMatrix.cpp"
+#include "../../include/IntMatrix.h"
+
+#include <gtest/gtest.h>
 
 using namespace std;
 
 int main(int argc, char **argv){
 	testing::InitGoogleTest(&argc, argv);
 	return RUN_ALL_TESTS();
+	return 0;
 }
 
 //Construct a non-zero, non-identity matrix:
@@ -65,13 +68,10 @@ TEST(IntMatrix, Test_eq)
 TEST(IntMatrix, Test_getIdentity)
 {
 	IntMatrix mat_id_1 = IntMatrix(3,3);
-	mat_id_1 = mat_id_1.getIdentityMatrix(2,3);
-	IntMatrix mat_id_2 = mat_id_1.getIdentityMatrix(3,2);
-	IntMatrix mat_id_3 = mat_id_1.getIdentityMatrix(2,2);
+	IntMatrix mat_id_2 = mat_id_1.getIdentityMatrix(2);
 	
 	mat_id_1.print();
 	mat_id_2.print();
-	mat_id_3.print();
 }
 
 TEST(IntMatrix, Test_scale)
@@ -124,7 +124,7 @@ TEST(IntMatrix, Test_multiply)
 	EXPECT_TRUE(mat_ab == mat_ab_manual);
 	
 	//Test muliply with identity-matrix
-	IntMatrix mat_id_2 = mat_a.getIdentityMatrix(2,2);
+	IntMatrix mat_id_2 = mat_a.getIdentityMatrix(2);
 	IntMatrix mat_a_2 = mat_a.multiply(mat_id_2);
 	IntMatrix mat_b_2 = mat_b.multiply(mat_id_2);
 	EXPECT_TRUE(mat_a == mat_a_2);
@@ -165,7 +165,7 @@ TEST(IntMatrix, Test_expBySqr)
 	a[1][0] = 3;
 	a[1][1] = 4;
 	IntMatrix mat_a = IntMatrix(2,2,a);
-	IntMatrix mat_id = mat_a.getIdentityMatrix(2,2);
+	IntMatrix mat_id = mat_a.getIdentityMatrix(2);
 	IntMatrix mat_id_4 = mat_id.expBySqr(4);
 	IntMatrix mat_a_4 = mat_a.expBySqr(4);
 	

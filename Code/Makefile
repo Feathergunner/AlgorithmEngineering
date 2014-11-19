@@ -1,68 +1,57 @@
 CXX = g++
-CXXFLAGS = -std=c++0x -Wall -O -I/usr/local/include
+CXXFLAGS = -std=c++0x -Wall -O -c
+CXXFLAGS_GTEST = -I/usr/local/include
 LDFLAGS = /usr/lib/libgtest.a -pthread
 
-SOURCES = src/Fibonacci.cpp src/IntMatrix.cpp src/measure/StopWatch.cpp src/measure/Meter.cpp
-SRC_MAIN = src/Fibonacci_main.cpp
-SRC_TEST_FIB = src/test/Fibonacci_test.cpp
-SRC_TEST_FIB_FAIL = src/test/Fibonacci_failedTests.cpp
-SRC_TEST_INTMAT = src/test/IntMatrix_test.cpp
-SRC_MEASURE_FIB = src/measure/Measure_Fib.cpp
+IntMatrix.o: src/IntMatrix.cpp include/IntMatrix.h
+	$(CXX) $(CXXFLAGS) $(CXXFLAGS_GTEST) src/IntMatrix.cpp
 
-OBJ_MAIN = $(SRC_MAIN:.cpp=.o)
-OBJ_TEST_FIB = $(SRC_TEST_FIB:.cpp=.o)
-OBJ_TEST_FIB_FAIL = $(SRC_TEST_FIB_FAIL:.cpp=.o)
-OBJ_TEST_INTMAT = $(SRC_TEST_INTMAT:.cpp=.o)
-OBJ_MEASURE_FIB = $(SRC_MEASURE_FIB:.cpp=.o)
-OBJ_OTHER = $(SOURCES:.cpp=.o)
-ALLOBJECTS = $(OBJ_OTHER) $(OBJ_MAIN) $(OBJ_TEST_FIB) $(OBJ_TEST_FIB_FAIL) $(OBJ_TEST_INTMAT) $(OBJ_MEASURE_FIB)
+test_IntMatrix.o: src/test/IntMatrix_test.cpp
+	$(CXX) $(CXXFLAGS) $(CXXFLAGS_GTEST) src/test/IntMatrix_test.cpp
 
-EXECUTABLE = Main
-EXE_TEST_FIB = TestFib
-EXE_TEST_FIB_FAIL = TestFibFail
-EXE_TEST_INTMAT = TestIntMat
-EXE_MEASURE_FIB = MeasureFib
-ALLEXES = $(EXECUTEABLE) $(EXE_TEST_FIB) $(EXE_TEST_FIB_FAIL) $(EXE_TEST_INTMAT) $(EXE_MEASURE_FIB)
-
-.PHONY: all
-all: build
+test_IntMatrix: IntMatrix.o test_IntMatrix.o
+	$(CXX) -o Test_IntMatrix IntMatrix.o IntMatrix_test.o $(LDFLAGS)
+	./Test_IntMatrix
 	
-# builds algorithms
-.PHONY: build
-build: $(OBJ_MAIN) $(OBJ_OTHER)
-	$(CXX) $(OBJ_MAIN) $(LDFLAGS) $(CXXFLAGS) -o $(EXECUTABLE)
+Fibonacci.o: src/Fibonacci.cpp include/Fibonacci.h
+	$(CXX) $(CXXFLAGS) src/Fibonacci.cpp
+	
+test_Fibonacci.o: src/test/Fibonacci_test.cpp
+	$(CXX) $(CXXFLAGS) $(CXXFLAGS_GTEST) src/test/Fibonacci_test.cpp
 
-# builds and executes tests:
-.PHONY: test_all
-test_all: test_mat test_fib test_fib_fail
+test_Fibonacci: IntMatrix.o Fibonacci.o test_Fibonacci.o 
+	$(CXX) -o Test_Fibonacci IntMatrix.o Fibonacci.o Fibonacci_test.o $(LDFLAGS)
+	./Test_Fibonacci
+	
+test_fail_Fibonacci.o: src/test/Fibonacci_failedTests.cpp
+	$(CXX) $(CXXFLAGS) $(CXXFLAGS_GTEST) src/test/Fibonacci_failedTests.cpp
 
-# tests the IntMatrix
-.PHONY: test_mat
-test_mat: $(OBJ_TEST_INTMAT) $(OBJ_OTHER)
-	$(CXX) $(OBJ_TEST_INTMAT) $(LDFLAGS) $(CXXFLAGS) -o $(EXE_TEST_INTMAT)
-	./$(EXE_TEST_INTMAT)
+test_fail_Fibonacci: IntMatrix.o Fibonacci.o test_fail_Fibonacci.o
+	$(CXX) -o Test_fail_Fibonacci IntMatrix.o Fibonacci.o Fibonacci_failedTests.o $(LDFLAGS)
+	./Test_fail_Fibonacci
+	
+tests: test_IntMatrix test_Fibonacci test_fail_Fibonacci
+	
+main_fib.o: Fibonacci_main.cpp
+	$(CXX) $(CXXFLAGS) Fibonacci_main.cpp
+	
+main_fib: main_fib.o IntMatrix.o Fibonacci.o
+	$(CXX) -o FibMain Fibonacci_main.o IntMatrix.o Fibonacci.o $(LDFLAGS)
+	
+StopWatch.o: src/measure/StopWatch.cpp include/measure/StopWatch.h
+	$(CXX) $(CXXFLAGS) src/measure/StopWatch.cpp
 
-# tests Fibonacci
-.PHONY: test_fib
-test_fib: $(OBJ_TEST_FIB) $(OBJ_OTHER)
-	$(CXX) $(OBJ_TEST_FIB) $(LDFLAGS) $(CXXFLAGS) -o $(EXE_TEST_FIB)
-	./$(EXE_TEST_FIB)
+Meter.o: src/measure/Meter.cpp include/measure/Meter.h
+	$(CXX) $(CXXFLAGS) src/measure/Meter.cpp
 
-# failed tests for Fibonacci
-.PHONY: test_fib_fail
-test_fib_fail: $(OBJ_TEST_FIB_FAIL) $(OBJ_OTHER)
-	$(CXX) $(OBJ_TEST_FIB_FAIL) $(LDFLAGS) $(CXXFLAGS) -o $(EXE_TEST_FIB_FAIL)
-	./$(EXE_TEST_FIB_FAIL)
+Measure_fib.o: src/measure/Measure_Fib.cpp
+	$(CXX) $(CXXFLAGS) src/measure/Measure_Fib.cpp
 
-# builds and executes measurements:
-# measures Fibonacci
-.PHONY: measurefib
-measure: $(OBJ_MEASURE_FIB) $(OBJ_OTHER)
-	$(CXX) $(OBJ_MEASURE_FIB) $(LDFLAGS) $(CXXFLAGS) -o $(EXE_MEASURE_FIB)
-	./$(EXE_MEASURE_FIB)
+Measure_Fib: IntMatrix.o Fibonacci.o StopWatch.o Meter.o Measure_fib.o
+	$(CXX) -o Measure_Fib IntMatrix.o Fibonacci.o StopWatch.o Meter.o Measure_Fib.o $(LDFLAGS)
 
 # Removes all objects and executables:
 .PHONY: clean
 clean:
-	rm -f $(ALLOBJECTS) $(ALLEXES)
+	rm -f *.o
 
