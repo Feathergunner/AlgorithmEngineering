@@ -49,7 +49,7 @@ void Meter::initfile(){
 	file.close();
 }
 
-void Meter::printData(const char* casename){
+void Meter::printData(char* casename){
 	fstream file;
 	file.open(filename, fstream::out | fstream::app);
 	file << setw(14) << casename << " I" << setw(14) << number_of_measurements << " I" << std::setw(14) << min << " I" << std::setw(14) << max << " I" << std::setw(14) << mean << " I" << std::setprecision(3) << std::fixed << std::setw(14) << std_deviation << "\n";

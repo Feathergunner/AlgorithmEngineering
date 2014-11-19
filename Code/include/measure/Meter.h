@@ -32,7 +32,7 @@ public:
 	
 	void initfile();
 
-	void printData(const char* casename);
+	void printData(char* casename);
 };
 
 #endif

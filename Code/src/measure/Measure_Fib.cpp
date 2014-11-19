@@ -2,68 +2,54 @@
 #include "../../include/Fibonacci.h"
 
 int main(){
-	Meter m = Meter("measure_Fibo.txt");
-		
-	int nom = 100;
-	m.measure(nom,Fibonacci::getFibo1,20);
-	m.printData("Fibo1(20)");
-	m.measure(nom,Fibonacci::getFibo1,30);
-	m.printData("Fibo1(30)");
-	m.measure(20,Fibonacci::getFibo1,35);
-	m.printData("Fibo1(30)");
-	m.measure(1,Fibonacci::getFibo1,40);
-	m.printData("Fibo1(30)");
+	char casename[15];
 	
-	m.measure(nom,Fibonacci::getFibo2,20);
-	m.printData("Fibo2(20)");
-	m.measure(nom,Fibonacci::getFibo2,30);
-	m.printData("Fibo2(30)");
-	m.measure(nom,Fibonacci::getFibo2,50);
-	m.printData("Fibo2(50)");
-	m.measure(nom,Fibonacci::getFibo2,100);
-	m.printData("Fibo2(100)");
-	m.measure(nom,Fibonacci::getFibo2,200);
-	m.printData("Fibo2(200)");
+	// for getFibo1 only 10 measurements
+	int nom = 10;
+	Meter m = Meter("measure_Fibo1.txt");
+	for (int i=1; i<40; i++){
+		m.measure(nom, Fibonacci::getFibo1, i);
+		sprintf(casename, "Fibo1(%i)",i);
+		m.printData(casename);
+	}
 	
-	m.measure(nom,Fibonacci::getFibo3,20);
-	m.printData("Fibo3(20)");
-	m.measure(nom,Fibonacci::getFibo3,30);
-	m.printData("Fibo3(30)");
-	m.measure(nom,Fibonacci::getFibo3,50);
-	m.printData("Fibo3(50)");
-	m.measure(nom,Fibonacci::getFibo3,100);
-	m.printData("Fibo3(100)");
-	m.measure(nom,Fibonacci::getFibo3,200);
-	m.printData("Fibo3(200)");
+	// all other methods are much faster, so make 50 measurements:
+	nom = 50;
 	
-	m.measure(nom,Fibonacci::getFibo4,20);
-	m.printData("Fibo4(20)");
-	m.measure(nom,Fibonacci::getFibo4,30);
-	m.printData("Fibo4(30)");
-	m.measure(nom,Fibonacci::getFibo4,50);
-	m.printData("Fibo4(50)");
-	m.measure(nom,Fibonacci::getFibo4,100);
-	m.printData("Fibo4(100)");
-	m.measure(nom,Fibonacci::getFibo4,200);
-	m.printData("Fibo4(200)");
+	m = Meter("measure_Fibo2.txt");
+	for (int i=1; i<90; i++){
+		m.measure(nom, Fibonacci::getFibo2, i);
+		sprintf(casename, "Fibo2(%i)",i);
+		m.printData(casename);
+	}
 	
-	m.measure(nom,Fibonacci::getFibo5,20);
-	m.printData("Fibo5(20)");
-	m.measure(nom,Fibonacci::getFibo5,30);
-	m.printData("Fibo5(30)");
-	m.measure(nom,Fibonacci::getFibo5,50);
-	m.printData("Fibo5(50)");
-	m.measure(nom,Fibonacci::getFibo5,100);
-	m.printData("Fibo5(100)");
-	m.measure(nom,Fibonacci::getFibo5,200);
-	m.printData("Fibo5(200)");
+	m = Meter("measure_Fibo3.txt");
+	for (int i=1; i<90; i++){
+		m.measure(nom, Fibonacci::getFibo3, i);
+		sprintf(casename, "Fibo3(%i)",i);
+		m.printData(casename);
+	}
 	
-	m.measure(nom,Fibonacci::getFibo2,20);
-	m.printData("Fibo6(20)");
-	m.measure(nom,Fibonacci::getFibo2,30);
-	m.printData("Fibo6(30)");
-	m.measure(nom,Fibonacci::getFibo2,40);
-	m.printData("Fibo6(40)");
+	m = Meter("measure_Fibo4.txt");
+	for (int i=1; i<40; i++){
+		m.measure(nom, Fibonacci::getFibo4, i);
+		sprintf(casename, "Fibo4(%i)",i);
+		m.printData(casename);
+	}
+	
+	m = Meter("measure_Fibo5.txt");
+	for (int i=1; i<37; i++){
+		m.measure(nom, Fibonacci::getFibo5, i);
+		sprintf(casename, "Fibo5(%i)",i);
+		m.printData(casename);
+	}
+	
+	m = Meter("measure_Fibo6.txt");
+	for (int i=1; i<40; i++){
+		m.measure(nom, Fibonacci::getFibo6, i);
+		sprintf(casename, "Fibo6(%i)",i);
+		m.printData(casename);
+	}
 	
 	return 0;
 }
