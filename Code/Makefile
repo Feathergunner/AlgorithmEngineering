@@ -3,55 +3,57 @@ CXXFLAGS = -std=c++0x -Wall -O -c
 CXXFLAGS_GTEST = -I/usr/local/include
 LDFLAGS = /usr/lib/libgtest.a -pthread
 
-IntMatrix.o: src/IntMatrix.cpp include/IntMatrix.h
-	$(CXX) $(CXXFLAGS) $(CXXFLAGS_GTEST) src/IntMatrix.cpp
+OBJDIR = objects/
 
-test_IntMatrix.o: src/test/IntMatrix_test.cpp
-	$(CXX) $(CXXFLAGS) $(CXXFLAGS_GTEST) src/test/IntMatrix_test.cpp
+$(OBJDIR)IntMatrix.o: src/IntMatrix.cpp include/IntMatrix.h
+	$(CXX) $(CXXFLAGS) $(CXXFLAGS_GTEST) src/IntMatrix.cpp -o $@
 
-test_IntMatrix: IntMatrix.o test_IntMatrix.o
-	$(CXX) -o Test_IntMatrix IntMatrix.o IntMatrix_test.o $(LDFLAGS)
+$(OBJDIR)IntMatrix_test.o: src/test/IntMatrix_test.cpp
+	$(CXX) $(CXXFLAGS) $(CXXFLAGS_GTEST) src/test/IntMatrix_test.cpp -o $@
+
+test_IntMatrix: $(OBJDIR)IntMatrix.o $(OBJDIR)IntMatrix_test.o
+	$(CXX) -o Test_IntMatrix $^ $(LDFLAGS)
 	./Test_IntMatrix
 	
-Fibonacci.o: src/Fibonacci.cpp include/Fibonacci.h
-	$(CXX) $(CXXFLAGS) src/Fibonacci.cpp
+$(OBJDIR)Fibonacci.o: src/Fibonacci.cpp include/Fibonacci.h
+	$(CXX) $(CXXFLAGS) src/Fibonacci.cpp -o $@
 	
-test_Fibonacci.o: src/test/Fibonacci_test.cpp
-	$(CXX) $(CXXFLAGS) $(CXXFLAGS_GTEST) src/test/Fibonacci_test.cpp
+$(OBJDIR)test_Fibonacci.o: src/test/Fibonacci_test.cpp
+	$(CXX) $(CXXFLAGS) $(CXXFLAGS_GTEST) src/test/Fibonacci_test.cpp -o $@
 
-test_Fibonacci: IntMatrix.o Fibonacci.o test_Fibonacci.o 
-	$(CXX) -o Test_Fibonacci IntMatrix.o Fibonacci.o Fibonacci_test.o $(LDFLAGS)
+test_Fibonacci: $(OBJDIR)IntMatrix.o $(OBJDIR)Fibonacci.o $(OBJDIR)test_Fibonacci.o 
+	$(CXX) -o Test_Fibonacci $^ $(LDFLAGS)
 	./Test_Fibonacci
 	
-test_fail_Fibonacci.o: src/test/Fibonacci_failedTests.cpp
-	$(CXX) $(CXXFLAGS) $(CXXFLAGS_GTEST) src/test/Fibonacci_failedTests.cpp
+$(OBJDIR)test_fail_Fibonacci.o: src/test/Fibonacci_failedTests.cpp
+	$(CXX) $(CXXFLAGS) $(CXXFLAGS_GTEST) src/test/Fibonacci_failedTests.cpp -o $@
 
-test_fail_Fibonacci: IntMatrix.o Fibonacci.o test_fail_Fibonacci.o
-	$(CXX) -o Test_fail_Fibonacci IntMatrix.o Fibonacci.o Fibonacci_failedTests.o $(LDFLAGS)
+test_fail_Fibonacci: $(OBJDIR)IntMatrix.o $(OBJDIR)Fibonacci.o $(OBJDIR)test_fail_Fibonacci.o
+	$(CXX) -o Test_fail_Fibonacci $^ $(LDFLAGS)
 	./Test_fail_Fibonacci
 	
 tests: test_IntMatrix test_Fibonacci test_fail_Fibonacci
 	
-main_fib.o: Fibonacci_main.cpp
-	$(CXX) $(CXXFLAGS) Fibonacci_main.cpp
+$(OBJDIR)main_fib.o: Fibonacci_main.cpp
+	$(CXX) $(CXXFLAGS) Fibonacci_main.cpp -o $@
 	
-main_fib: main_fib.o IntMatrix.o Fibonacci.o
-	$(CXX) -o FibMain Fibonacci_main.o IntMatrix.o Fibonacci.o $(LDFLAGS)
+main_fib: $(OBJDIR)main_fib.o $(OBJDIR)IntMatrix.o $(OBJDIR)Fibonacci.o
+	$(CXX) -o FibMain $^ $(LDFLAGS)
 	
-StopWatch.o: src/measure/StopWatch.cpp include/measure/StopWatch.h
-	$(CXX) $(CXXFLAGS) src/measure/StopWatch.cpp
+$(OBJDIR)StopWatch.o: src/measure/StopWatch.cpp include/measure/StopWatch.h
+	$(CXX) $(CXXFLAGS) src/measure/StopWatch.cpp -o $@
 
-Meter.o: src/measure/Meter.cpp include/measure/Meter.h
-	$(CXX) $(CXXFLAGS) src/measure/Meter.cpp
+$(OBJDIR)Meter.o: src/measure/Meter.cpp include/measure/Meter.h
+	$(CXX) $(CXXFLAGS) src/measure/Meter.cpp -o $@
 
-Measure_fib.o: src/measure/Measure_Fib.cpp
-	$(CXX) $(CXXFLAGS) src/measure/Measure_Fib.cpp
+$(OBJDIR)Measure_fib.o: src/measure/Measure_Fib.cpp
+	$(CXX) $(CXXFLAGS) src/measure/Measure_Fib.cpp -o $@
 
-Measure_Fib: IntMatrix.o Fibonacci.o StopWatch.o Meter.o Measure_fib.o
-	$(CXX) -o Measure_Fib IntMatrix.o Fibonacci.o StopWatch.o Meter.o Measure_Fib.o $(LDFLAGS)
+Measure_Fib: $(OBJDIR)IntMatrix.o $(OBJDIR)Fibonacci.o $(OBJDIR)StopWatch.o $(OBJDIR)Meter.o $(OBJDIR)Measure_fib.o
+	$(CXX) -o Measure_Fib $^ $(LDFLAGS)
 
 # Removes all objects and executables:
 .PHONY: clean
 clean:
-	rm -f *.o
+	rm -r objects/*
 
