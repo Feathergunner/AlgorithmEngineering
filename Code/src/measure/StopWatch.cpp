@@ -7,7 +7,8 @@ void StopWatch::startWatch(){
 	
 // stop Timer, compute elapsed time
 void StopWatch::stopWatch(){
-	total = std::chrono::system_clock::now()-start;
+	//explizitly cast duration into desired format:
+	total = std::chrono::duration_cast<std::chrono::duration<uint64_t,std::ratio<1,1000000> >>(std::chrono::system_clock::now()-start);
 }
 	
 void StopWatch::resetWatch(){

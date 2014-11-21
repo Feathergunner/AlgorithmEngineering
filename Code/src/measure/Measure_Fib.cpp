@@ -13,8 +13,9 @@ int main(){
 		m.printData(casename);
 	}
 	
-	// all other methods are much faster, so make 50 measurements:
-	nom = 50;
+	// all other methods are much faster, so make 1000 measurements:
+	// => one will observe that random peaks in used time will happen in almost every testcase
+	nom = 1000;
 	
 	m = Meter("measure_Fibo2.txt");
 	for (int i=1; i<90; i++){
