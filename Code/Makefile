@@ -5,9 +5,6 @@ LDFLAGS = /usr/lib/libgtest.a -pthread
 
 OBJDIR = objects/
 
-$(OBJDIR):
-	mkdir $(OBJDIR)
-
 ## IntMatrix
 $(OBJDIR)IntMatrix.o: src/IntMatrix.cpp include/IntMatrix.h
 	mkdir $(OBJDIR) -p
