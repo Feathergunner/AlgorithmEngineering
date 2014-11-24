@@ -51,6 +51,12 @@ TEST(Fib4Test, TestCorrectComputation){
 	}
 }
 
+TEST(Fib4_2Test, TestCorrectComputation){	
+	for (int i=0; i<45; i++){
+		EXPECT_EQ(Fibonacci::getFibo3(i), Fibonacci::getFibo4_2(i));
+	}
+}
+
 TEST(Fib5Test, TestCorrectComputation){
 	for (int i=0; i<35; i++){
 		EXPECT_EQ(Fibonacci::getFibo3(i), Fibonacci::getFibo5(i));

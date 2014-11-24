@@ -25,6 +25,7 @@ class IntMatrix{
 	void scale(int s);
 	IntMatrix multiply(IntMatrix rhs);
 	IntMatrix expBySqr(uint32_t power);
+	IntMatrix expBySqr2(uint32_t power);
 	
 	// print matrix to screen:
 	void print();

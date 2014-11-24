@@ -92,6 +92,33 @@ IntMatrix IntMatrix::expBySqr(unsigned int p){
 	return ret;
 }
 
+//computes the p-th power of THIS
+//second implementation using only constant memory
+IntMatrix IntMatrix::expBySqr2(unsigned int p){
+	//check if matrix is square
+	EXPECT_EQ(rows, cols);
+	
+	if (p==0)
+		return getIdentityMatrix(rows);
+	//initialise ret = this:
+	IntMatrix ret = IntMatrix(cols, rows, matrix);
+	IntMatrix rest_odd = getIdentityMatrix(rows);
+	while (p>1)
+	{
+		if(p%2==0){
+			p /= 2;
+			ret = ret.multiply(ret);
+		}else{ // p%2 == 1
+			p = (p-1)/2;
+			rest_odd = rest_odd.multiply(ret);
+			ret = ret.multiply(ret);
+		}
+	}
+	// now p==1
+	ret = ret.multiply(rest_odd);
+	return ret;
+}
+
 void IntMatrix::print(){
 	for (unsigned int i=0; i<rows; i++){
 		for (unsigned int j=0; j<cols; j++){

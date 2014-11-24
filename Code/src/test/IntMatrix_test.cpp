@@ -1,6 +1,7 @@
 #include "../../include/IntMatrix.h"
 
 #include <gtest/gtest.h>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -180,4 +181,35 @@ TEST(IntMatrix, Test_expBySqr)
 	IntMatrix mat_a4 = IntMatrix(2,2,a4);
 	
 	EXPECT_TRUE(mat_id == mat_id_4);
+}
+
+TEST(IntMatrix, Test_expBySqr2)
+{
+	//exponentiate random matrices:
+	vector<vector<int> > a;
+	//initialise pseudo-random-generator => reproduzible
+	srand(0);
+	
+	// test 10 pseudo-random cases:
+	for (int j=0; j<10; j++)
+	{
+		a = vector<vector<int> >(2,vector<int>(2,0));
+		a[0][0] = rand()%10;
+		a[0][1] = rand()%10;
+		a[1][0] = rand()%10;
+		a[1][1] = rand()%10;
+		
+		IntMatrix mat_a = IntMatrix(2,2,a);
+		
+		for (int i=0; i<10; i++)
+		{
+			// compute mat_a^i with expBySqr and expBySqr2 and compare results
+			IntMatrix mat_ai1 = mat_a.expBySqr(i);
+			mat_ai1.print();
+			IntMatrix mat_ai2 = mat_a.expBySqr2(i);
+			mat_ai2.print();
+			EXPECT_TRUE(mat_ai1 == mat_ai2);
+		}
+	}
+	 
 }

@@ -14,6 +14,7 @@ public:
 	static uint64_t getFibo2(uint32_t n);
 	static uint64_t getFibo3(uint32_t n);
 	static uint64_t getFibo4(uint32_t n);
+	static uint64_t getFibo4_2(uint32_t n);
 	static uint64_t getFibo5(uint32_t n);
 	static uint64_t getFibo6(uint32_t n);
 };
