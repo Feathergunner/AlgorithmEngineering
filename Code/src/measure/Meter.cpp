@@ -1,8 +1,10 @@
 #include "../../include/measure/Meter.h"
 
-Meter::Meter(const char* file="measurements.txt"){
-	filename = file;
+Meter::Meter(char file[50]){
+	sprintf(filename, "measurements/%s",file);
+	sprintf(filename_p, "measurements/%s_p",file);
 	initfile();
+	initfile_plotting();
 }
 
 void Meter::measure(uint32_t nom, uint64_t(*function)(uint32_t), uint32_t val){
@@ -54,3 +56,15 @@ void Meter::printData(char* casename){
 	file.close();
 }
 
+void Meter::initfile_plotting()
+{
+	remove(filename_p);
+}
+
+void Meter::printData_plotting(char* casename)
+{
+	fstream file;
+	file.open(filename_p, fstream::out | fstream::app);
+	file << casename << "\t" << min << "\t" << max << "\t" << mean << "\t" << std::setprecision(2) << std::fixed << std_deviation << "\n";
+	file.close();
+}

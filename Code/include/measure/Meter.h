@@ -20,14 +20,20 @@ class Meter{
 	double std_deviation;
 	int number_of_measurements;
 
-	const char* filename;
+	//const char* filename;
+	char filename[50];
+	char filename_p[50];
 
 public:
-	Meter(const char* file);
+	//Meter(const char* file);
+	Meter(char file[50]);
 
 	void measure(uint32_t nom, uint64_t(*function)(uint32_t), uint32_t val);
 	void initfile();
 	void printData(char* casename);
+	
+	void initfile_plotting();
+	void printData_plotting(char* casename);
 };
 
 #endif
