@@ -60,6 +60,7 @@ $(OBJDIR)Measure_fib.o: src/measure/Measure_Fib.cpp
 	$(CXX) $(CXXFLAGS) src/measure/Measure_Fib.cpp -o $@
 
 Measure_Fib: $(OBJDIR)IntMatrix.o $(OBJDIR)Fibonacci.o $(OBJDIR)StopWatch.o $(OBJDIR)Meter.o $(OBJDIR)Measure_fib.o
+	mkdir measurements -p
 	$(CXX) -o Measure_Fib $^ $(LDFLAGS)
 
 ## Sort
