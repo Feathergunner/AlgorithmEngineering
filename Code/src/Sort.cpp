@@ -153,7 +153,7 @@ vector<T> Sort::insertionsort_vec(vector<T> data)
 // recursive quicksort
 // in place-sorting, the originial vector will be altered
 // running time as above (the list-quicksort) worst case O(n^2), better on average
-// but only constant memory
+// but only constant memory, only needs additional memory during partitioning
 template<typename T>
 vector<T> Sort::quicksort_vec(vector<T> data)
 {
@@ -221,11 +221,67 @@ void Sort::quicksort_vec_subroutine(vector<T> *data, int beg, int end)
 		(*data)[beg+i] = tmp[i];
 	}
 	
+	// TO DO: deconstruct vector tmp here
+	
 	// start partition for interval [beg,beg+i_beg)
 	Sort::quicksort_vec_subroutine(data, beg, beg+i_beg);
 	
 	//start partition for interval [beg+i_beg,end)
 	Sort::quicksort_vec_subroutine(data, beg+i_beg, end);
+	
+	return;
+}
+
+// mergesort
+// in \Theta(n log n) time
+// and linear memory, because the algorithm only needs additional memory during merge
+template<typename T>
+vector<T> Sort::mergesort(vector<T> data)
+{
+	Sort::mergesort_subroutine(&data, 0, data.size());
+	return data;
+}
+
+template<typename T>
+void Sort::mergesort_subroutine(vector<T> *data, int beg, int end)
+{
+	// trivial case:
+	if (end-beg < 2)
+		return;
+
+	// divide:
+	int mid = beg+((end-beg)/2);
+	mergesort_subroutine(data, beg, mid);
+	mergesort_subroutine(data, mid, end);
+	
+	// conquer (merge):
+	vector<T> t = vector<T>(end-beg);
+	int i1=beg;
+	int i2=mid;
+	for (int i=0; i<end-beg; i++)
+	{
+		if (i1<mid && i2<end)
+		{
+			// insert the smaller element from both partitions at current position:
+			if ((*data)[i1] <= (*data)[i2])
+				t[i] = (*data)[i1++];
+			else
+				t[i] = (*data)[i2++];
+		}else
+		{
+			// one partition is completely integrated: add rest of other partition
+			if (i1==mid)
+				t[i] = (*data)[i2++];
+			else // i.e. i2==end
+				t[i] = (*data)[i1++];
+		}
+	}
+	
+	// write t back to data:
+	for (int i=0; i<end-beg; i++)
+		(*data)[beg+i] = t[i];
+	
+	//To Do (?): deconstruct vector t
 	
 	return;
 }
@@ -239,5 +295,6 @@ void Sort::instantiate()
 	vector<int> tv = vector<int> (1,1);
 	Sort::quicksort_vec(tv);
 	Sort::insertionsort_vec(tv);
+	Sort::mergesort(tv);
 	return;
 }
