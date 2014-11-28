@@ -172,7 +172,7 @@ TEST(QuickSort_list, TestRandom)
 	// create list:
 	list<int> test = Sort_test::create_randomlist(Sort_test::size_of_testarrays, 0);
 	// sort:
-	list<int> sorted = Sort::quicksort_rec(test);
+	list<int> sorted = Sort::quicksort_list(test);
 	// test:
 	EXPECT_TRUE(Sort_test::issorted(sorted.begin(), Sort_test::size_of_testarrays));
 }
@@ -182,7 +182,7 @@ TEST(QuickSort_list, TestOrdered)
 	// create list:
 	list<int> test = Sort_test::create_orderedlist(Sort_test::size_of_testarrays);
 	// sort:
-	list<int> sorted = Sort::quicksort_rec(test);
+	list<int> sorted = Sort::quicksort_list(test);
 	// test:
 	EXPECT_TRUE(Sort_test::issorted(sorted.begin(), Sort_test::size_of_testarrays));
 }
@@ -192,7 +192,7 @@ TEST(QuickSort_list, TestRevOrdered)
 	// create list:
 	list<int> test = Sort_test::create_revorderedlist(Sort_test::size_of_testarrays);
 	// sort:
-	list<int> sorted = Sort::quicksort_rec(test);
+	list<int> sorted = Sort::quicksort_list(test);
 	// test:
 	EXPECT_TRUE(Sort_test::issorted(sorted.begin(), Sort_test::size_of_testarrays));
 }
@@ -202,17 +202,17 @@ TEST(QuickSort_list, TestPermuted)
 	// create list:
 	list<int> test = Sort_test::create_permutedlist(Sort_test::size_of_testarrays);
 	// sort:
-	list<int> sorted = Sort::quicksort_rec(test);
+	list<int> sorted = Sort::quicksort_list(test);
 	// test:
 	EXPECT_TRUE(Sort_test::issorted(sorted.begin(), Sort_test::size_of_testarrays));
 }
 
-TEST(InsertionSort_vector, TestRadnom)
+TEST(InsertionSort_vector, TestRandom)
 {
 	// create vector:
 	vector<int> test = Sort_test::create_randomvector(Sort_test::size_of_testarrays, 0);
 	// sort:
-	vector<int> sorted = Sort::insertionsort(test);
+	vector<int> sorted = Sort::insertionsort_vec(test);
 	// test:
 	EXPECT_TRUE(Sort_test::issorted(sorted.begin(), Sort_test::size_of_testarrays));
 }
@@ -222,7 +222,7 @@ TEST(InsertionSort_vector, TestOrdered)
 	// create vector:
 	vector<int> test = Sort_test::create_orderedvector(Sort_test::size_of_testarrays);
 	// sort:
-	vector<int> sorted = Sort::insertionsort(test);
+	vector<int> sorted = Sort::insertionsort_vec(test);
 	// test:
 	EXPECT_TRUE(Sort_test::issorted(sorted.begin(), Sort_test::size_of_testarrays));
 }
@@ -232,7 +232,7 @@ TEST(InsertionSort_vector, TestRevOrdered)
 	// create vector:
 	vector<int> test = Sort_test::create_revorderedvector(Sort_test::size_of_testarrays);
 	// sort:
-	vector<int> sorted = Sort::insertionsort(test);
+	vector<int> sorted = Sort::insertionsort_vec(test);
 	// test:
 	EXPECT_TRUE(Sort_test::issorted(sorted.begin(), Sort_test::size_of_testarrays));
 }
@@ -242,7 +242,7 @@ TEST(InsertionSort_vector, TestPermuted)
 	// create vector:
 	vector<int> test = Sort_test::create_permutedvector(Sort_test::size_of_testarrays);
 	// sort:
-	vector<int> sorted = Sort::insertionsort(test);
+	vector<int> sorted = Sort::insertionsort_vec(test);
 	// test:
 	EXPECT_TRUE(Sort_test::issorted(sorted.begin(), Sort_test::size_of_testarrays));
 }
@@ -252,7 +252,7 @@ TEST(QuickSort_vector, TestRandom)
 	// create vector:
 	vector<int> test = Sort_test::create_randomvector(Sort_test::size_of_testarrays, 0);
 	// sort:
-	vector<int> sorted = Sort::quicksort_rec(test);
+	vector<int> sorted = Sort::quicksort_vec(test);
 	// test:
 	EXPECT_TRUE(Sort_test::issorted(sorted.begin(), Sort_test::size_of_testarrays));
 }
@@ -262,7 +262,7 @@ TEST(QuickSort_vector, TestOrdered)
 	// create vector:
 	vector<int> test = Sort_test::create_orderedvector(Sort_test::size_of_testarrays);
 	// sort:
-	vector<int> sorted = Sort::quicksort_rec(test);
+	vector<int> sorted = Sort::quicksort_vec(test);
 	// test:
 	EXPECT_TRUE(Sort_test::issorted(sorted.begin(), Sort_test::size_of_testarrays));
 }
@@ -272,7 +272,7 @@ TEST(QuickSort_vector, TestRevOrdered)
 	// create vector:
 	vector<int> test = Sort_test::create_revorderedvector(Sort_test::size_of_testarrays);
 	// sort:
-	vector<int> sorted = Sort::quicksort_rec(test);
+	vector<int> sorted = Sort::quicksort_vec(test);
 	// test:
 	EXPECT_TRUE(Sort_test::issorted(sorted.begin(), Sort_test::size_of_testarrays));
 }
@@ -282,7 +282,7 @@ TEST(QuickSort_vector, TestPermuted)
 	// create vector:
 	vector<int> test = Sort_test::create_permutedvector(Sort_test::size_of_testarrays);
 	// sort:
-	vector<int> sorted = Sort::quicksort_rec(test);
+	vector<int> sorted = Sort::quicksort_vec(test);
 	// test:
 	EXPECT_TRUE(Sort_test::issorted(sorted.begin(), Sort_test::size_of_testarrays));
 }

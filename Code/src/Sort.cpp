@@ -43,40 +43,72 @@ list<T> Sort::insertionsort_list(list<T> data)
 }
 
 // quicksort algorithm with worst-case running time in O(n^2), better on average
-// recursive implementation, needs nlogn space
+// in-place-implementation (the original list will be altered), needs only constant additional space
 template<typename T>
-list<T> Sort::quicksort_rec(list<T> data)
+list<T> Sort::quicksort_list(list<T> data)
 {	
+	quicksort_list_subroutine(&data, data.begin(), data.end());
+	return data;
+}
+
+template<typename T>
+void Sort::quicksort_list_subroutine (list<T> *data, typename list<T>::iterator beg, typename list<T>::iterator end)
+{
+	// trivial case:
+	// note that in c++11, list.size() only needs constant time
+	if ((*data).size()==1)
+		return;
 	//divide list by pivot-element
 	// make sure both partitions are not empty:
 	// look at the first two _different_ elements in data, choose the greater one as pivot
 	// all elements smaller than p into first partition => at least one
 	// all elements equal or greater than p into second partition => at least one
-	T p = *(data.begin());
-	typename list<T>::iterator it=data.begin();
-	while (*it == p && it != data.end()) it++;
+	T p = *beg;
+	typename list<T>::iterator it=beg;
+	while (*it == p && it != end) it++;
 	// if the end is reached, all elements are the same => no sorting necessary => return list
-	if (it == data.end())
-		return data;
+	if (it == end)
+		return;
+		
 	// else divide list into two non-empty partitions as described above:
+	// choose pivot-element as described above:
 	if (*it > p) p = *it;
-	list<T> first, second;
-	for (typename list<T>::iterator it=data.begin(); it!=data.end(); it++)
+	
+	//mid: iterator that points to first element of second partition
+	typename list<T>::iterator mid = end;
+	for (typename list<T>::iterator it=beg; it!=mid; it++)
 	{
-		if (*it<p)
-			first.push_back(*it);
-		else
-			second.push_back(*it);
+		if (*it>=p)
+		{
+			// current element is >= pivot-element
+			// move element to second partition i.e. to the back of the current interval
+			(*data).insert(end, *it);
+			if (mid==end)
+				mid--;
+			// erase old position of element:
+			// if it == beg, reassign beg:
+			if (it == beg)
+				beg++;
+			// if it = begin(), reassign it:
+			if (it == (*data).begin())
+			{
+				(*data).erase(it);
+				it = (*data).begin();
+			}else{
+				typename list<T>::iterator tmp = it;
+				(*data).erase(tmp);
+			}
+			//decrease iterator because the current pointed-at-element has not yet been visited
+			it--;
+		}
+		// else leave element in first partition: do nothing
 	}
 	
-	// recursion: sort 'first' and 'second'
-	list<T> f_s = quicksort_rec(first);
-	list<T> s_s = quicksort_rec(second);
+	// recursion: sort both partitions:
+	quicksort_list_subroutine(data, beg, mid);
+	quicksort_list_subroutine(data, mid, end);
 	
-	// merge, i.e. insert 'first' at the beginning of 'second'
-	s_s.insert(s_s.begin(),f_s.begin(),f_s.end());
-	
-	return s_s;
+	return;
 }
 
 //--------------------------------------------------------------------------------------
@@ -87,20 +119,23 @@ list<T> Sort::quicksort_rec(list<T> data)
 // in-place sorting, the original vector will be altered
 // needs only constant additional space
 template<typename T>
-vector<T> Sort::insertionsort(vector<T> data)
+vector<T> Sort::insertionsort_vec(vector<T> data)
 {
 	int size = data.size();
 	if (size < 2) return data;
-	bool found;
 	
+	// flag to note if a correct insertion-position is found:
+	bool found;
 	// iterate through all elements:
 	for (int i=1; i<size; i++){
 		int j=i-1;
+		// start with last element of all currently visited elements,
 		// search backwards until a smaller or equal element is found
 		found = false;
 		while (!found && j>=0){
 			// elment is greater:
 			if (data[j]>data[j+1]){
+				// swap elements:
 				T tmp = data[j];
 				data[j] = data[j+1];
 				data[j+1] = tmp;
@@ -116,16 +151,18 @@ vector<T> Sort::insertionsort(vector<T> data)
 }
 
 // recursive quicksort
-// in place-sorting
+// in place-sorting, the originial vector will be altered
+// running time as above (the list-quicksort) worst case O(n^2), better on average
+// but only constant memory
 template<typename T>
-vector<T> Sort::quicksort_rec(vector<T> data)
+vector<T> Sort::quicksort_vec(vector<T> data)
 {
-	Sort::quicksort_rec_vec_subroutine(&data,0,data.size());
+	Sort::quicksort_vec_subroutine(&data,0,data.size());
 	return data;
 }
 
 template<typename T>
-void Sort::quicksort_rec_vec_subroutine(vector<T> *data, int beg, int end)
+void Sort::quicksort_vec_subroutine(vector<T> *data, int beg, int end)
 {
 	if (end-beg == 1)
 		//nothing to do
@@ -185,10 +222,10 @@ void Sort::quicksort_rec_vec_subroutine(vector<T> *data, int beg, int end)
 	}
 	
 	// start partition for interval [beg,beg+i_beg)
-	Sort::quicksort_rec_vec_subroutine(data, beg, beg+i_beg);
+	Sort::quicksort_vec_subroutine(data, beg, beg+i_beg);
 	
 	//start partition for interval [beg+i_beg,end)
-	Sort::quicksort_rec_vec_subroutine(data, beg+i_beg, end);
+	Sort::quicksort_vec_subroutine(data, beg+i_beg, end);
 	
 	return;
 }
@@ -197,10 +234,10 @@ void Sort::quicksort_rec_vec_subroutine(vector<T> *data, int beg, int end)
 void Sort::instantiate()
 {
 	list<int> tl;
-	Sort::quicksort_rec(tl);
+	Sort::quicksort_list(tl);
 	Sort::insertionsort_list(tl);
-	vector<int> tv = vector<int> (4,1);
-	Sort::quicksort_rec(tv);
-	Sort::insertionsort(tv);
+	vector<int> tv = vector<int> (1,1);
+	Sort::quicksort_vec(tv);
+	Sort::insertionsort_vec(tv);
 	return;
 }
