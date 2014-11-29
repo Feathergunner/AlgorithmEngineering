@@ -1,4 +1,4 @@
-#include "../include/IntMatrix.h"
+#include <IntMatrix.h>
 
 #include <gtest/gtest.h>
 

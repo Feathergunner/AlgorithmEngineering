@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "../../include/Fibonacci.h"
+#include <Fibonacci.h>
 
 using namespace std;
 
