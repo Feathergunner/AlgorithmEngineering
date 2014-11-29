@@ -1,25 +1,20 @@
-#include "../../include/measure/Meter.h"
+#include <measure/Meter.h>
 
 Meter::Meter(char file[50]){
+	min = 0;
+	max = 0;
+	mean = 0;
+	std_deviation = 0;
+	
 	sprintf(filename, "measurements/%s",file);
 	sprintf(filename_p, "measurements/%s_p",file);
 	initfile();
 	initfile_plotting();
 }
 
-void Meter::measure(uint32_t nom, uint64_t(*function)(uint32_t), uint32_t val){
-	number_of_measurements = nom;
-	data = vector<uint64_t>(nom, 0);
-
-	// run tests:
-	for (int i=0; i<number_of_measurements; i++){
-		w.startWatch();
-		function(val);
-		w.stopWatch();
-		data[i] = w.getTime();
-	}
-
-	// compute statistics:
+// compute statistics:
+void Meter::compute_statistics()
+{
 	// min, max, mean:
 	min = data[0];
 	max = 0;
@@ -44,7 +39,7 @@ void Meter::initfile(){
 	remove(filename);
 	fstream file;
 	file.open (filename, fstream::out | fstream::app);
-	file << " Input:        I #Tests:       I Minimum(µs):  I Maximum(µs):  I Mean(µs):     I std. deviation(µs):\n";
+	file << " Input:        I #Tests:       I Minimum:      I Maximum:      I Mean:         I std. deviation:\n";
 	file << "---------------I---------------I---------------I---------------I---------------I--------------------\n";
 	file.close();
 }
