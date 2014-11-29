@@ -221,7 +221,7 @@ void Sort::quicksort_vec_subroutine(vector<T> *data, int beg, int end)
 		(*data)[beg+i] = tmp[i];
 	}
 	
-	// TO DO: deconstruct vector tmp here
+	// TO DO: deconstruct vector tmp here?
 	
 	// start partition for interval [beg,beg+i_beg)
 	Sort::quicksort_vec_subroutine(data, beg, beg+i_beg);
@@ -285,6 +285,86 @@ void Sort::mergesort_subroutine(vector<T> *data, int beg, int end)
 	
 	return;
 }
+
+using namespace std;
+
+//--------------------------------------------------------------------------------
+// create lists
+//--------------------------------------------------------------------------------
+
+list<int> Sort::create_randomlist(int size, int init){
+	list<int> randlist;
+	// initialize with constant: 'randomlist' is pseudo-random, ca be recreated
+	srand(init);
+	for (int i=0; i<size; i++){
+		randlist.push_back(rand()%1000);
+	}
+	return randlist;
+}
+
+list<int> Sort::create_permutedlist(int size){
+	// note that random.shuffle() needs random-access-iterators => not possible for lists
+	// create permuted vector:
+	vector<int> pv = create_permutedvector(size);
+	// create list from vector:
+	list<int> plist(pv.begin(), pv.end());
+	return plist;
+}
+
+list<int> Sort::create_orderedlist(int size){
+	list<int> olist;
+	for(int i=0; i<size; i++){
+		olist.push_back(i);
+	}
+	return olist;
+}
+
+list<int> Sort::create_revorderedlist(int size){
+	list<int> rlist;
+	for(int i=0; i<size; i++){
+		rlist.push_front(i);
+	}
+	return rlist;
+}
+
+//--------------------------------------------------------------------------------
+// create vectors
+//--------------------------------------------------------------------------------
+
+vector<int> Sort::create_randomvector(int size, int init)
+{
+	vector<int> rvector(size,0);
+	srand(init);
+	for (int i=0; i<size; i++)
+		rvector[i] = rand()%1000;
+	return rvector;
+}
+
+vector<int> Sort::create_orderedvector(int size)
+{
+	vector<int> ovector(size,0);
+	for (int i=0; i<size; i++)
+		ovector[i] = i;
+	return ovector;
+}
+
+vector<int> Sort::create_revorderedvector(int size)
+{
+	vector<int> rvector(size,0);
+	for (int i=0; i<size; i++)
+		rvector[i] = size-i;
+	return rvector;
+}
+
+vector<int> Sort::create_permutedvector(int size)
+{
+	// create ordered vector:
+	vector<int> pvector = create_orderedvector(size);
+	// shuffle vector:
+	random_shuffle(pvector.begin(), pvector.end());
+	return pvector;
+}
+
 
 // pre-instantiate templates:
 void Sort::instantiate()
