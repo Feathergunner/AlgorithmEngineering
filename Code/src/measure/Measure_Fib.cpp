@@ -1,81 +1,76 @@
-#include "../../include/measure/Meter.h"
-#include "../../include/Fibonacci.h"
+#include <measure/Meter.h>
+#include <Fibonacci.h>
+
+typedef	uint64_t (*function)(uint32_t);
 
 int main(){
 	char casename[15];
-	char filename[20];
+	char filename_t[30];
+	char filename_c[30];
+	
+	// Meters for time and cycles:
+	Meter m_t, m_c;
 	
 	int nom;
+	int maxinput;
 	
 	bool prepare_for_plotting = true;
-
-	// for getFibo1 only 10 measurements
-	nom = 10;
-	sprintf(filename, "%s", "measure_Fibo1");
-	Meter m = Meter(filename);
-	for (int i=1; i<40; i++){
-		m.measure(nom, Fibonacci::getFibo1, i);
-		sprintf(casename, "%i",i);
-		m.printData(casename);
-		if (prepare_for_plotting) m.printData_plotting(casename);
-	}
 	
-	// all other methods are much faster, so make 1000 measurements:
-	// => one will observe that random peaks in used time will happen in almost every testcase
+	// filenames for testcases:
+	const char* cases[7] = {"Fibo1",
+													"Fibo2",
+													"Fibo3",
+													"Fibo4",
+													"Fibo4-2",
+													"Fibo5",
+													"Fibo6"};
+	
+	// functionpointers for testcases:
+	function fiboalgos[7] = {Fibonacci::getFibo1,
+														Fibonacci::getFibo2,
+														Fibonacci::getFibo3,
+														Fibonacci::getFibo4,
+														Fibonacci::getFibo4_2,
+														Fibonacci::getFibo5,
+														Fibonacci::getFibo6};
+	
 	nom = 1000;
+	maxinput = 40;
+	for (int c=0; c<7; c++)
+	{
+		if (c==0)
+		{
+			// for getFibo1 only 10 measurements
+			nom = 10;
+		}
+		
+		// adjust max. input:
+		if (c==1 || c==2)
+			maxinput = 90;
+		if (c==5)
+			maxinput = 37;
+			
+		sprintf(filename_t, "time_%s", cases[c]);
+		m_t = Meter(filename_t);
+		sprintf(filename_c, "cycles_%s", cases[c]);
+		m_c = Meter(filename_c);
+		for (int i=1; i<maxinput; i++)
+		{
+			// measure time:
+			m_t.measure_time<uint64_t, uint32_t>(nom, fiboalgos[c], i);
+			// measure cycles:
+			m_c.measure_cycles<uint64_t, uint32_t>(nom, fiboalgos[c], i);
+			sprintf(casename, "%i",i);
+			m_t.printData(casename);
+			m_c.printData(casename);
+			if (prepare_for_plotting)
+			{
+				m_t.printData_plotting(casename);
+				m_c.printData_plotting(casename);
+			}
+		}
+		
 
-	sprintf(filename, "%s", "measure_Fibo2");
-	m = Meter(filename);
-	for (int i=1; i<90; i++){
-		m.measure(nom, Fibonacci::getFibo2, i);
-		sprintf(casename, "%i",i);
-		m.printData(casename);
-		if (prepare_for_plotting) m.printData_plotting(casename);
-	}
-
-	sprintf(filename, "%s", "measure_Fibo3");
-	m = Meter(filename);
-	for (int i=1; i<90; i++){
-		m.measure(nom, Fibonacci::getFibo3, i);
-		sprintf(casename, "%i",i);
-		m.printData(casename);
-		if (prepare_for_plotting) m.printData_plotting(casename);
-	}
-
-	sprintf(filename, "%s", "measure_Fibo4");
-	m = Meter(filename);
-	for (int i=1; i<40; i++){
-		m.measure(nom, Fibonacci::getFibo4, i);
-		sprintf(casename, "%i",i);
-		m.printData(casename);
-		if (prepare_for_plotting) m.printData_plotting(casename);
-	}
-	
-	sprintf(filename, "%s", "measure_Fibo4_2");
-	m = Meter(filename);
-	for (int i=1; i<40; i++){
-		m.measure(nom, Fibonacci::getFibo4_2, i);
-		sprintf(casename, "%i",i);
-		m.printData(casename);
-		if (prepare_for_plotting) m.printData_plotting(casename);
-	}
-
-	sprintf(filename, "%s", "measure_Fibo5");
-	m = Meter(filename);
-	for (int i=1; i<37; i++){
-		m.measure(nom, Fibonacci::getFibo5, i);
-		sprintf(casename, "%i",i);
-		m.printData(casename);
-		if (prepare_for_plotting) m.printData_plotting(casename);
-	}
-
-	sprintf(filename, "%s", "measure_Fibo6");
-	m = Meter(filename);
-	for (int i=1; i<40; i++){
-		m.measure(nom, Fibonacci::getFibo6, i);
-		sprintf(casename, "%i",i);
-		m.printData(casename);
-		if (prepare_for_plotting) m.printData_plotting(casename);
 	}
 
 	return 0;
