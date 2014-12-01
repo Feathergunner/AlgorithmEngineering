@@ -21,7 +21,7 @@ private:
 	template<typename T>
 	static void quicksort_list_subroutine(list<T> *data, typename list<T>::iterator beg, typename list<T>::iterator end);
 	template<typename T>
-	static void mergesort_subroutine(vector<T> *data, int beg, int end);
+	static void mergesort_subroutine(vector<T> *data, int beg, int end, vector<T> *tmp);
 
 public:
 	// fixed size of testlists and -vectors:	
@@ -64,6 +64,10 @@ public:
 	// method that creates a list of permuted numbers
 	static list<int> create_permutedlist(int size);
 	static vector<int> create_permutedvector(int size);
+	
+	// methods that creates lists with entries appearing multiple times
+	static list<int> create_multilist(int size);
+	static vector<int> create_multivector(int size);
 
 	// method to test if list or vector is sorted
 	// needs input-iterator at begin of container
@@ -80,27 +84,16 @@ public:
 		return true;
 	}
 
-// for debugging purpose: prints elements of container
-// needs input-iterator as start and number of elements to print
-template<typename InputIterator>
-static void print(InputIterator it, int size)
-{
-	for (int i=0; i<size-1; i++)
-		cout << *it++ << " ";
-	cout << "\n";
-	return;
-}
-
-/*
-	//method that tests if list/vector is sorted
+	// for debugging purpose: prints elements of container
+	// needs input-iterator as start and number of elements to print
 	template<typename InputIterator>
-	static bool issorted(InputIterator begin, int size);
-	
-	//method that prints data of list/vector
-	template<typename InputIterator>
-	static void print(InputIterator begin, int size);
-*/
+	static void print(InputIterator it, int size)
+	{
+		for (int i=0; i<size-1; i++)
+			cout << *it++ << " ";
+		cout << "\n";
+		return;
+	}
 };
-
 
 #endif

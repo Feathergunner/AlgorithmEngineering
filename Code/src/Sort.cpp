@@ -54,10 +54,6 @@ list<T> Sort::quicksort_list(list<T> data)
 template<typename T>
 void Sort::quicksort_list_subroutine (list<T> *data, typename list<T>::iterator beg, typename list<T>::iterator end)
 {
-	// trivial case:
-	// note that in c++11, list.size() only needs constant time
-	if ((*data).size()==1)
-		return;
 	//divide list by pivot-element
 	// make sure both partitions are not empty:
 	// look at the first two _different_ elements in data, choose the greater one as pivot
@@ -221,8 +217,6 @@ void Sort::quicksort_vec_subroutine(vector<T> *data, int beg, int end)
 		(*data)[beg+i] = tmp[i];
 	}
 	
-	// TO DO: deconstruct vector tmp here?
-	
 	// start partition for interval [beg,beg+i_beg)
 	Sort::quicksort_vec_subroutine(data, beg, beg+i_beg);
 	
@@ -238,12 +232,16 @@ void Sort::quicksort_vec_subroutine(vector<T> *data, int beg, int end)
 template<typename T>
 vector<T> Sort::mergesort(vector<T> data)
 {
-	Sort::mergesort_subroutine(&data, 0, data.size());
+	//preallocate memory needed for merge, so it has to be done only once:
+	vector<T> tmp = vector<T>(data.size());
+	// TODO rewrite subroutine so it works with pointers to this tmp-memory for merging
+	
+	Sort::mergesort_subroutine(&data, 0, data.size(), &tmp);
 	return data;
 }
 
 template<typename T>
-void Sort::mergesort_subroutine(vector<T> *data, int beg, int end)
+void Sort::mergesort_subroutine(vector<T> *data, int beg, int end, vector<T> *tmp)
 {
 	// trivial case:
 	if (end-beg < 2)
@@ -251,8 +249,8 @@ void Sort::mergesort_subroutine(vector<T> *data, int beg, int end)
 
 	// divide:
 	int mid = beg+((end-beg)/2);
-	mergesort_subroutine(data, beg, mid);
-	mergesort_subroutine(data, mid, end);
+	mergesort_subroutine(data, beg, mid, tmp);
+	mergesort_subroutine(data, mid, end, tmp);
 	
 	// conquer (merge):
 	vector<T> t = vector<T>(end-beg);
@@ -264,24 +262,22 @@ void Sort::mergesort_subroutine(vector<T> *data, int beg, int end)
 		{
 			// insert the smaller element from both partitions at current position:
 			if ((*data)[i1] <= (*data)[i2])
-				t[i] = (*data)[i1++];
+				(*tmp)[i] = (*data)[i1++];
 			else
-				t[i] = (*data)[i2++];
+				(*tmp)[i] = (*data)[i2++];
 		}else
 		{
 			// one partition is completely integrated: add rest of other partition
 			if (i1==mid)
-				t[i] = (*data)[i2++];
+				(*tmp)[i] = (*data)[i2++];
 			else // i.e. i2==end
-				t[i] = (*data)[i1++];
+				(*tmp)[i] = (*data)[i1++];
 		}
 	}
 	
 	// write t back to data:
 	for (int i=0; i<end-beg; i++)
-		(*data)[beg+i] = t[i];
-	
-	//To Do (?): deconstruct vector t
+		(*data)[beg+i] = (*tmp)[i];
 	
 	return;
 }
@@ -327,6 +323,17 @@ list<int> Sort::create_revorderedlist(int size){
 	return rlist;
 }
 
+list<int> Sort::create_multilist(int size){
+	list<int> rlist;
+	for (int i=0; i<size; i++){
+		if (i<100)
+			rlist.push_front((i*i)%10);
+		else
+			rlist.push_front((i*i)%100);
+	}
+	return rlist;
+}
+
 //--------------------------------------------------------------------------------
 // create vectors
 //--------------------------------------------------------------------------------
@@ -365,6 +372,18 @@ vector<int> Sort::create_permutedvector(int size)
 	return pvector;
 }
 
+vector<int> Sort::create_multivector(int size)
+{
+	vector<int> rvector(size, 0);
+	for (int i=0; i<size; i++)
+	{
+		if (i<100)
+			rvector[i] = (i*i)%10;
+		else
+			rvector[i] = (i*i)%100;
+	}
+	return rvector;
+}
 
 // pre-instantiate templates:
 void Sort::instantiate()
