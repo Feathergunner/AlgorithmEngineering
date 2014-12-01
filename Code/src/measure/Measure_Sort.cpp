@@ -15,26 +15,31 @@ int main(){
 	bool prepare_for_plotting = true;
 	
 	// Filenames for testcases:
-	const char* cases[20] = {"IS_list_rand",
+	const char* cases[25] = {"IS_list_rand",
 												"IS_list_perm",
 												"IS_list_ord",
 												"IS_list_revord",
+												"IS_list_multi",
 												"QS_list_rand",
 												"QS_list_perm",
 												"QS_list_ord",
 												"QS_list_revord",
+												"QS_list_multi",
 												"IS_vec_rand",
 												"IS_vec_perm",
 												"IS_vec_ord",
 												"IS_vec_revord",
+												"IS_vec_multi",
 												"QS_vec_rand",
 												"QS_vec_perm",
 												"QS_vec_ord",
 												"QS_vec_revord",
+												"QS_vec_multi",
 												"MS_rand",
 												"MS_perm",
 												"MS_ord",
-												"MS_revord"};
+												"MS_revord",
+												"MS_multi"};
 
 	//functionpointer:
 	sort_list_ptr listalgos[2] = {Sort::insertionsort_list,
@@ -52,38 +57,41 @@ int main(){
 	nom = 20;
 	inputsize = 20000;
 	
-	for (int c=0; c<20; c++)
+	for (int c=0; c<25; c++)
 	{		
 		sprintf(filename_t, "time_%s", cases[c]);
 		m_t = Meter(filename_t);
 		sprintf(filename_c, "cycles_%s", cases[c]);
 		m_c = Meter(filename_c);
 		
-		// c<8 => list, c>=8 => vector
-		if (c<8)
+		// c<10 => list, c>=10 => vector
+		if (c<10)
 		{
 			// list-algorithms:
 			
-			// measure until max. inputsize is reached or function needs more than 0.1s
-			for (int i=100; i<=inputsize && m_t.get_mean() < 50000; i+=100)
+			// measure until max. inputsize is reached or function needs more than 0.03s
+			for (int i=100; i<=inputsize && m_t.get_mean() < 30000; i+=100)
 			{			
 				// created parameter list: an measure:
-				// c%4==0 => random
-				// c%4==1 => permuted
-				// c%4==2 => ordered
-				// c%4==3 => reverse ordered
-				if (c%4==0)
+				// c%5==0 => random
+				// c%5==1 => permuted
+				// c%5==2 => ordered
+				// c%5==3 => reverse ordered
+				// c%5==4 => mutliple entries
+				if (c%5==0)
 					testlist = Sort::create_randomlist(i,0);
-				if (c%4==1)
+				if (c%5==1)
 					testlist = Sort::create_permutedlist(i);
-				if (c%4==2)
+				if (c%5==2)
 					testlist = Sort::create_orderedlist(i);
-				if (c%4==3)
+				if (c%5==3)
 					testlist = Sort::create_revorderedlist(i);
+				if (c%5==4)
+					testlist = Sort::create_multilist(i);
 				// Measure time:
-				m_t.measure_time<list<int>, list<int> >(nom, listalgos[c/4], testlist);
+				m_t.measure_time<list<int>, list<int> >(nom, listalgos[c/5], testlist);
 				// Measure cycles:
-				m_c.measure_cycles<list<int>, list<int> >(nom, listalgos[c/4], testlist);
+				m_c.measure_cycles<list<int>, list<int> >(nom, listalgos[c/5], testlist);
 			
 				// write data to file:
 				sprintf(casename, "%i",i);
@@ -97,25 +105,28 @@ int main(){
 			}
 		}else{
 			// case: vector
-			// measure until max. inputsize is reached or function needs more than 0.1s
-			for (int i=100; i<=inputsize && m_t.get_mean() < 50000; i+=100)
+			// measure until max. inputsize is reached or function needs more than 0.05s
+			for (int i=100; i<=inputsize && m_t.get_mean() < 30000; i+=100)
 			{	
 				// created parameter vector:
-				// c%4==0 => random
-				// c%4==1 => permuted
-				// c%4==2 => ordered
-				// c%4==3 => reverse ordered
-				if (c%4==0)
+				// c%5==0 => random
+				// c%5==1 => permuted
+				// c%5==2 => ordered
+				// c%5==3 => reverse ordered
+				// c%5==4 => mutliple entries
+				if (c%5==0)
 					testvec = Sort::create_randomvector(i,0);
-				if (c%4==1)
+				if (c%5==1)
 					testvec = Sort::create_permutedvector(i);
-				if (c%4==2)
+				if (c%5==2)
 					testvec = Sort::create_orderedvector(i);
-				if (c%4==3)
+				if (c%5==3)
 					testvec = Sort::create_revorderedvector(i);
+				if (c%5==4)
+					testvec = Sort::create_multivector(i);
 				// Measure:
-				m_t.measure_time<vector<int>, vector<int> >(nom, vecalgos[(c-8)/4], testvec);
-				m_c.measure_cycles<vector<int>, vector<int> >(nom, vecalgos[(c-8)/4], testvec);
+				m_t.measure_time<vector<int>, vector<int> >(nom, vecalgos[(c-10)/5], testvec);
+				m_c.measure_cycles<vector<int>, vector<int> >(nom, vecalgos[(c-10)/5], testvec);
 		
 				// write data to file:
 				sprintf(casename, "%i",i);
@@ -129,6 +140,9 @@ int main(){
 			}
 		}
 	}
+	
+	// Tried to measure sorting algorithms of std:
+	// didnt work as expected :(
 	
 	/*
 	// std::vector sort:

@@ -5,6 +5,7 @@ CXXFLAGS_GTEST = -I/usr/local/include
 LDFLAGS = /usr/lib/libgtest.a -pthread
 
 OBJDIR = objects/
+ALLEXES = Test_IntMatrix FibMain Test_Fibonacci Test_fail_Fibonacci Measure_Fib SortMain Test_Sort Measure_Sort
 
 ## IntMatrix
 $(OBJDIR)IntMatrix.o: src/IntMatrix.cpp include/IntMatrix.h
@@ -102,5 +103,5 @@ all: main_fib main_sort tests
 # Removes all objects and executables:
 .PHONY: clean
 clean:
-	rm -r objects/*
+	rm -r objects/* $(ALLEXES)
 

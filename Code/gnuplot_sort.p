@@ -34,9 +34,15 @@ plot for [i=1:words(files)] "measurements/time_".word(files,i)."_revord_p" \
 			using 1:($2):($3) notitle with filledcurve ls i, \
 		 for [i=1:words(files)] "measurements/time_".word(files,i)."_revord_p" \
 			using 1:4 title word(titles, i) with line ls i
+			
+set output 'sort_multi_time.png'
+plot for [i=1:words(files)] "measurements/time_".word(files,i)."_multi_p" \
+			using 1:($2):($3) notitle with filledcurve ls i, \
+		 for [i=1:words(files)] "measurements/time_".word(files,i)."_multi_p" \
+			using 1:4 title word(titles, i) with line ls i
 
-set yr [0:100000000]
 set ylabel "Cycles"
+set yr [0:100000000]
 set output 'sort_rand_cycles.png'
 plot for [i=1:words(files)] "measurements/cycles_".word(files,i)."_rand_p" \
 			using 1:($2):($3) notitle with filledcurve ls i, \
@@ -59,5 +65,11 @@ set output 'sort_revord_cycles.png'
 plot for [i=1:words(files)] "measurements/cycles_".word(files,i)."_revord_p" \
 			using 1:($2):($3) notitle with filledcurve ls i, \
 		 for [i=1:words(files)] "measurements/cycles_".word(files,i)."_revord_p" \
+			using 1:4 title word(titles, i) with line ls i
+
+set output 'sort_multi_cycles.png'
+plot for [i=1:words(files)] "measurements/cycles_".word(files,i)."_multi_p" \
+			using 1:($2):($3) notitle with filledcurve ls i, \
+		 for [i=1:words(files)] "measurements/cycles_".word(files,i)."_multi_p" \
 			using 1:4 title word(titles, i) with line ls i
 
