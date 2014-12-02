@@ -22,6 +22,8 @@ private:
 	static void quicksort_list_subroutine(list<T> *data, typename list<T>::iterator beg, typename list<T>::iterator end);
 	template<typename T>
 	static void mergesort_subroutine(vector<T> *data, int beg, int end, vector<T> *tmp);
+	template<typename T>
+	static void insertionsort_vec_quick(vector<T> *data, int beg, int end);
 
 public:
 	// fixed size of testlists and -vectors:	

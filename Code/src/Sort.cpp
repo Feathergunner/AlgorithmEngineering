@@ -146,6 +146,40 @@ vector<T> Sort::insertionsort_vec(vector<T> data)
 	return data;
 }
 
+//another version of insertionsort that gets pointer to vector and sorts elements between indices beg and end
+// to use for small cases in quicksort and mergesort
+template<typename T>
+void Sort::insertionsort_vec_quick(vector<T> *data, int beg, int end)
+{
+	if (end-beg < 2)
+		return;
+	
+	// flag to note if a correct insertion-position is found:
+	bool found;
+	// iterate through all elements:
+	for (int i=beg; i<end; i++){
+		int j=i-1;
+		// start with last element of all currently visited elements,
+		// search backwards until a smaller or equal element is found
+		found = false;
+		while (!found && j>=beg){
+			// elment is greater:
+			if ((*data)[j]>(*data)[j+1]){
+				// swap elements:
+				T tmp = (*data)[j];
+				(*data)[j] = (*data)[j+1];
+				(*data)[j+1] = tmp;
+				// search further:
+				j--;
+			}else{
+				//break
+				found = true;
+			}
+		}
+	}
+	return;
+}
+
 // recursive quicksort
 // in place-sorting, the originial vector will be altered
 // running time as above (the list-quicksort) worst case O(n^2), better on average
@@ -163,20 +197,12 @@ void Sort::quicksort_vec_subroutine(vector<T> *data, int beg, int end)
 	if (end-beg == 1)
 		//nothing to do
 		return;
-	if (end-beg == 2)
+
+	// short case: do faster insertionSort
+	if (end-beg < 130)
 	{
-		// check if two elements are in correct order
-		if ((*data)[beg] <= (*data)[beg+1])
-			// in correct order: nothing to do
-			return;
-		else
-		{
-			// else: swap elements:
-			T tmp = (*data)[beg];
-			(*data)[beg] = (*data)[beg+1];
-			(*data)[beg+1] = tmp;
-			return;
-		}
+		Sort::insertionsort_vec_quick(data,beg,end);
+		return;
 	}
 	
 	//divide part of vector by pivot-element
@@ -234,7 +260,6 @@ vector<T> Sort::mergesort(vector<T> data)
 {
 	//preallocate memory needed for merge, so it has to be done only once:
 	vector<T> tmp = vector<T>(data.size());
-	// TODO rewrite subroutine so it works with pointers to this tmp-memory for merging
 	
 	Sort::mergesort_subroutine(&data, 0, data.size(), &tmp);
 	return data;
@@ -246,6 +271,13 @@ void Sort::mergesort_subroutine(vector<T> *data, int beg, int end, vector<T> *tm
 	// trivial case:
 	if (end-beg < 2)
 		return;
+
+	// short case: do faster insertionSort
+	if (end-beg < 130)
+	{
+		Sort::insertionsort_vec_quick(data,beg,end);
+		return;
+	}
 
 	// divide:
 	int mid = beg+((end-beg)/2);
@@ -343,7 +375,7 @@ vector<int> Sort::create_randomvector(int size, int init)
 	vector<int> rvector(size,0);
 	srand(init);
 	for (int i=0; i<size; i++)
-		rvector[i] = rand()%1000;
+		rvector[i] = rand()%100000;
 	return rvector;
 }
 
@@ -375,13 +407,9 @@ vector<int> Sort::create_permutedvector(int size)
 vector<int> Sort::create_multivector(int size)
 {
 	vector<int> rvector(size, 0);
+	srand(0);
 	for (int i=0; i<size; i++)
-	{
-		if (i<100)
-			rvector[i] = (i*i)%10;
-		else
-			rvector[i] = (i*i)%100;
-	}
+		rvector[i] = rand()%(size/10);
 	return rvector;
 }
 
