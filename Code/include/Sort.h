@@ -145,7 +145,12 @@ public:
 //implementations with lists
 //--------------------------------------------------------------------------------------
 
-//simple sorting algorithm in O(n^2)
+// Insertionsort
+// simple sorting algorithm
+
+// worst case in O(n^2)
+// average case in O(n^2)
+// best case in O(n)
 // needs only constant additional space
 template<typename T>
 list<T> Sort::insertionsort_list(list<T> data)
@@ -179,8 +184,14 @@ list<T> Sort::insertionsort_list(list<T> data)
 	return data;
 }
 
-// quicksort algorithm with worst-case running time in O(n^2), better on average
-// in-place-implementation (the original list will be altered), needs only constant additional space
+// quicksort algorithm 
+
+// worst-case running time in O(n^2)
+// average running time in O(nlogn)
+// best case in O(nlogn)
+// needs linear additional space
+
+// NOT in-place-implementation, did not improve this one (I focused on vector-implementations)
 template<typename T>
 list<T> Sort::quicksort_list(list<T> data)
 {	
@@ -248,7 +259,12 @@ void Sort::quicksort_list_subroutine (list<T> *data, typename list<T>::iterator 
 //implementations with vectors
 //--------------------------------------------------------------------------------------
 
-// insertion sort: simple sorting algorithm in O(n^2)
+// insertion sort: simple sorting algorithm
+
+// worst case in O(n^2)
+// average case in O(n^2)
+// best case in O(n)
+
 // in-place sorting, the original vector will be altered
 // needs only constant additional space
 template<typename T>
@@ -288,10 +304,17 @@ void Sort::insertionsort_vec_subroutine(vector<T> *data, int beg, int end)
 	return;
 }
 
-// recursive quicksort
+// quicksort
+
+// for big inputs: (>>100)
+// running time worst case in O(n^2)
+// average case in O(n logn)
+// best case in O(n log n) 
+// for smaller inputs:
+// best case in O(n)
+
 // in place-sorting, the originial vector will be altered
-// running time as above (the list-quicksort) worst case O(n^2), better on average
-// but only constant memory, only needs additional memory during partitioning
+// needs only constant additional space
 template<typename T>
 void Sort::quicksort_vec(vector<T> *data)
 {	
@@ -319,7 +342,10 @@ void Sort::quicksort_vec_subroutine(vector<T> *data, int beg, int end)
 	// get pivot-element:
 	T p = get_pivot(data, beg, end);
 	
-	// "sort" elements into partitions as described above:
+	// the *_target iterator will point to the first element NOT BELONGING to the partition
+	// the *_search iterator will point to the first element belonging to THE OTHER partition
+	// this difference is needed to realize fat-partitioning
+	
 	// iterator for first partition (from beginning of array):
 	int it_beg_search = beg;
 	int it_beg_target = beg;
@@ -357,6 +383,7 @@ void Sort::quicksort_vec_subroutine(vector<T> *data, int beg, int end)
 		// => first >p-element from beginning is in second partition
 		// 		& first <p-element from end is in first partition
 		// => array is correctly partitioned
+		
 		// else: swap elements:
 		if (it_beg_target < it_end_target)
 		{
@@ -419,11 +446,12 @@ void Sort::quicksort_vec_subroutine(vector<T> *data, int beg, int end)
 					swap (data, it_end_search, it_end_target);
 		
 				// now elements at beg_target and end_target are non-p-elements.
-				// and beg_target > p > end_target
+				// and data[beg_target] > p > data[end_target]
 				// swap them!
 				
 				swap (data, it_beg_target, it_end_target);
 			
+				// update iterators so they point to the next unvisited elements:
 				it_beg_search = it_beg_target++;
 				it_end_search = it_end_target--;
 			}
@@ -437,22 +465,6 @@ void Sort::quicksort_vec_subroutine(vector<T> *data, int beg, int end)
 	
 	while ((*data)[it_beg_target] >= p) it_beg_target--;
 	while ((*data)[it_end_target] <= p) it_end_target++;
-	
-	/*	
-	cout << "data between " << beg << " and " << end << ", pivot = " << p << "\n";
-	cout << "it_beg_target = " << it_beg_target << "\n";
-	cout << "it_beg_search = " << it_beg_search << "\n";
-	cout << "it_end_target = " << it_end_target << "\n";
-	cout << "it_end_search = " << it_end_search << "\n";
-	
-	for (int i=0; i<(end-beg); i++)
-	{
-		cout << beg+i <<":" << (int)((*data)[beg+i]) << " ";
-	}
-	cout << "\n\n";
-	int a;
-	cin >> a;
-	*/
 		
 	// start partition for interval [beg,beg+i_beg)
 	Sort::quicksort_vec_subroutine(data, beg, it_beg_target+1);
@@ -464,8 +476,9 @@ void Sort::quicksort_vec_subroutine(vector<T> *data, int beg, int end)
 }
 
 // mergesort
+
 // in \Theta(n log n) time
-// and linear memory, because the algorithm only needs additional memory during merge
+// and linear memory, because the algorithm only needs additional memory during merge which is pre-allocated
 template<typename T>
 void Sort::mergesort(vector<T> *data)
 {
