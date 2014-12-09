@@ -93,6 +93,14 @@ $(OBJDIR)Measure_Sort.o: src/measure/Measure_Sort.cpp
 Measure_Sort: $(OBJDIR)Sort.o $(OBJDIR)StopWatch.o $(OBJDIR)Meter.o $(OBJDIR)Measure_Sort.o
 	mkdir measurements -p
 	$(CXX) -o Measure_Sort $^ $(LDFLAGS)
+	
+$(OBJDIR)Measure_quick_Sort.o: src/measure/Measure_quick_Sort.cpp
+	mkdir $(OBJDIR) -p
+	$(CXX) $(CXXFLAGS) $(INCLUDES) src/measure/Measure_quick_Sort.cpp -o $@	
+	
+Measure_quick_Sort: $(OBJDIR)Sort.o $(OBJDIR)StopWatch.o $(OBJDIR)Meter.o $(OBJDIR)Measure_quick_Sort.o
+	mkdir measurements -p
+	$(CXX) -o Measure_quick_Sort $^ $(LDFLAGS)
 
 ## all tests:
 tests: test_IntMatrix test_Fibonacci test_fail_Fibonacci test_Sort

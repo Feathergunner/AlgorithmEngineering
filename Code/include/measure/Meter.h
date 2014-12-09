@@ -36,6 +36,12 @@ public:
 	template<typename RT, typename PT>
 	void measure_cycles(uint32_t nom, RT(*function)(PT arg), PT val);
 	
+	// special methods to measure std::sort
+	template<typename PT>
+	void measure_time_stdsort(uint32_t nom, void(*function)(PT arg1, PT arg2), PT val1, PT val2);
+	template<typename PT>
+	void measure_cycles_stdsort(uint32_t nom, void(*function)(PT arg1, PT arg2), PT val1, PT val2);
+	
 	void initfile();
 	void printData(char* casename);
 	
@@ -114,6 +120,73 @@ void Meter::measure_cycles(uint32_t nom, RT(*function)(PT arg), PT val)
 		data[i]=end-start;
 	}
 	compute_statistics();
-
 }
+
+template<typename PT>
+void Meter::measure_time_stdsort(uint32_t nom, void(*function)(PT arg1, PT arg2), PT val1, PT val2)
+{
+	number_of_measurements = nom;
+
+	//measured values:
+	data = vector<uint64_t>(nom, 0);
+
+	// run tests:
+	for (int i=0; i<number_of_measurements; i++){
+		w.startWatch();
+		function(val1, val2);
+		w.stopWatch();
+		data[i] = w.getTime();
+	}
+	compute_statistics();
+}
+
+template<typename PT>
+void Meter::measure_cycles_stdsort(uint32_t nom, void(*function)(PT arg1, PT arg2), PT val1, PT val2)
+{
+	number_of_measurements = nom;
+	uint32_t cycles_low, cycles_high, cycles_low1, cycles_high1;
+	uint64_t start, end;
+	
+	data = vector<uint64_t>(nom, 0);
+	
+	//run tests:
+	for (int i=0; i<number_of_measurements; i++)
+	{
+	
+	/*
+		// Code as in paper:
+		// doesnt work "Bad register name %%rax" (in lines 93-94)
+		asm volatile ("CPUID\n\t"::: "%rax", "%rbx", "%rcx", "%rdx");
+		asm volatile ("RDTSC\n\t"
+									"mov %%edx, %0\n\t"
+									"mov %%eax, %1\n\t": "=r" (cycles_high), "=r" (cycles_low):: "%rax", "%rdx");
+									
+		function(val);
+		
+		asm volatile ("mov %%cr0, %%rax\n\t"
+									"mov %%rax, %%cr0\n\t"
+									"RDTSC\n\t"
+									"mov %%edx, %0\n\t"
+									"mov %%eax, %1\n\t": "=r" (cycles_high), "=r" (cycles_low1):: "%rax", "%rdx");
+	*/
+		asm volatile ("CPUID\n\t": : : "%rax", "%rbx", "%rcx", "%rdx");
+		asm volatile ("RDTSC\n\t"
+									"mov %%edx, %0\n\t"
+									"mov %%eax, %1\n\t": "=r" (cycles_high), "=r" (cycles_low):: "%rax", "%rbx", "%rcx", "%rdx");
+									
+		function(val1, val2);
+		
+		asm volatile ("CPUID\n\t"
+									"RDTSC\n\t"
+									"mov %%edx, %0\n\t"
+									"mov %%eax, %1\n\t": "=r" (cycles_high1), "=r" (cycles_low1):: "%rax", "%rbx", "%rcx", "%rdx");
+										
+		start = ( ((uint64_t)cycles_high << 32) | cycles_low );
+		end = (((uint64_t)cycles_high1 << 32) | cycles_low1 );
+		
+		data[i]=end-start;
+	}
+	compute_statistics();
+}
+
 #endif
